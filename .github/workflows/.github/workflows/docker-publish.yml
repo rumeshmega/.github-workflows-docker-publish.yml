@@ -23,4 +23,4 @@ jobs:
           docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
           docker buildx build --platform linux/amd64,linux/arm64 --push -t docker.io/rumeshmega/rumeshmega/rumeshmega/rumeshimage:latest .
           docker login --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} ghcr.io
-          docker buildx build --platform linux/amd64,linux/arm64 --push -t ghcr.io/your-username/your-repo:latest .
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t ghcr.io/rumeshmega/rumeshmega/rumeshmega/rumeshimage:latest .
