@@ -1,0 +1,26 @@
+name: Publish Docker image to GitHub Container Registry
+on:
+  release:
+    types:
+      - created
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - name: Build and push Docker image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker buildx create --use
+          docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t docker.io/your-username/your-repo:latest .
+          docker login --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} ghcr.io
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t ghcr.io/your-username/your-repo:latest .
